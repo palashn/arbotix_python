@@ -68,6 +68,7 @@ class EndlessController(Controller):
 
     def startup(self):
         worker_thread = threading.Thread(None, self.execute_trajectory_worker, 'traj-worker-thread')
+        worker_thread.daemon = True
         worker_thread.start()
         self.server.start()
 
@@ -119,7 +120,7 @@ class EndlessController(Controller):
         except ValueError as val:
             rospy.logerr("Invalid joint in trajectory.")
             return
-        rospy.loginfo(self.name+": enqueuing points...")
+        rospy.logdebug(self.name+": enqueuing points...")
         for point in traj.points:
             self.points_queue.put(point)
 

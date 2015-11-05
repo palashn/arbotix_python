@@ -63,7 +63,13 @@ class DigitalSensor:
             msg = Digital()
             msg.header.stamp = rospy.Time.now()
             msg.value = self.device.getDigital(self.pin)
-            self.pub.publish(msg)
+            if msg.value < 0:
+              msg.value = 255
+              rospy.logwarn('error in reading digital pin. returning HIGH')
+            try:
+              self.pub.publish(msg)
+            except rospy.exceptions.ROSSerializationException:
+              print 'serialization exception. msg value %s' % msg.value
             self.t_next = rospy.Time.now() + self.t_delta
 
 class AnalogSensor:
