@@ -64,8 +64,8 @@ class DigitalSensor:
             msg.header.stamp = rospy.Time.now()
             msg.value = self.device.getDigital(self.pin)
             if msg.value < 0:
-              msg.value = 255
-              rospy.logwarn('error in reading digital pin. returning HIGH')
+              msg.value = 0
+              rospy.logwarn('error in reading digital pin. returning LOW')
             try:
               self.pub.publish(msg)
             except rospy.exceptions.ROSSerializationException:
